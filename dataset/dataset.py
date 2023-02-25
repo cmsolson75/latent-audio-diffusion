@@ -5,8 +5,10 @@ from torch.utils.data import Dataset
 # import tqdm
 from glob import glob
 from lad.utils import PadCrop, RandomPhaseInvert, Stereo
-# import argparse
 
+
+# import argparse ------ this will be in the main file
+# This is different
 
 class DrumDataset(Dataset):
     def __init__(self, paths, sample_size, sample_rate):
@@ -61,11 +63,10 @@ class DrumDataset(Dataset):
 
         return audio, audio_filename
 
+# training_dir = '/Users/cameronolson/ML-DataSets/Sample Dataset'
+# sample_rate = 44100
+# sample_size = 44100
 
-training_dir = '/Users/cameronolson/ML-DataSets/Sample Dataset'
-sample_rate = 44100
-sample_size = 44100
-
-train_set = DrumDataset([training_dir], sample_size, sample_rate)
+# train_set = DrumDataset([training_dir], sample_sizesize, sample_rate)
 
 ## TODO: implement arg parsing to this file for parameters!!!

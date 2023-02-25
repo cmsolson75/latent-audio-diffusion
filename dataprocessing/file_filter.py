@@ -120,5 +120,4 @@ path_dump = '/Users/cameronolson/ML-DataSets/DUMP'
 # key_count(B_DIR, 'hat')
 # file_filter(B_DIR, path_dump, hf_1)
 
-# TODO: Fix mode -- you dont need it but it would be good
-# TODO: test file move
+
