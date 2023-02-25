@@ -1,13 +1,15 @@
 import torch
 import torchaudio
 from torchaudio import transforms as T
+from torch.utils.data import Dataset
 # import tqdm
 from glob import glob
 from lad.utils import PadCrop, RandomPhaseInvert, Stereo
+# import argparse
 
 
-class DrumDataset(torch.utils.data.Dataset):
-    def __init__(self, paths, global_args):
+class DrumDataset(Dataset):
+    def __init__(self, paths, sample_size, sample_rate):
         super().__init__()
         # Create the bucket for files
         self.filenames = []
@@ -15,7 +17,7 @@ class DrumDataset(torch.utils.data.Dataset):
         # augment data: PadCrop, RandomPhaseInvert
         # Look at PadCrop --- is this shortening or just for random
         self.augs = torch.nn.Sequential(
-            PadCrop(global_args.sample_size),  # Probobly get rid of Pad crop!!!!!!
+            PadCrop(sample_size),  # Probobly get rid of Pad crop!!!!!!
             RandomPhaseInvert(),
         )
         # Re Channel data into stereo()
@@ -27,10 +29,10 @@ class DrumDataset(torch.utils.data.Dataset):
         for path in paths:
             self.filenames += glob(f'{path}/**/*{file_type}', recursive=True)  # recursive?
 
-        self.sr = global_args.sample_rate
+        self.sr = sample_rate
 
     # Load audio file --- torchaudio
-    def load_files(self, filename):
+    def load_file(self, filename):
 
         audio, sr = torchaudio.load(filename)
         # Resample audio files
@@ -52,6 +54,7 @@ class DrumDataset(torch.utils.data.Dataset):
 
         # augmentation
         audio = self.augs(audio)
+        audio = self.encoding(audio)
 
         # Normalize
         audio = audio.clamp(-1, 1)
@@ -59,4 +62,10 @@ class DrumDataset(torch.utils.data.Dataset):
         return audio, audio_filename
 
 
-paths = ''
+training_dir = '/Users/cameronolson/ML-DataSets/Sample Dataset'
+sample_rate = 44100
+sample_size = 44100
+
+train_set = DrumDataset([training_dir], sample_size, sample_rate)
+
+## TODO: implement arg parsing to this file for parameters!!!
